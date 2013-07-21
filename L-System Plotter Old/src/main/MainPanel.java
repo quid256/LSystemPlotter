@@ -109,7 +109,10 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		plotBttn.addActionListener(this);
 		opPanel.add(plotBttn);
 		
-		
+		ColorPickerComponent c = new ColorPickerComponent();
+		c.setBounds(0, 0, 50, 30);
+		c.setMaximumSize(new Dimension(50, 30));
+		opPanel.add(c);
 		
 		
 		plotFrame = new JFrame("Fractal Plot");
