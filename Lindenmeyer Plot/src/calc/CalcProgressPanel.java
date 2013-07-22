@@ -1,4 +1,4 @@
-package main;
+package calc;
 
 import java.awt.Color;
 
@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+
+import main.PlotPanel;
+import main.RuleTableDataProvider;
 
 @SuppressWarnings("serial")
 public class CalcProgressPanel extends JPanel implements CalculatorProgressListener {

@@ -1,4 +1,4 @@
-package main;
+package calc;
 
 public interface CalculatorProgressListener {
 	public void calculatorFinish(String pattern, int segLength);

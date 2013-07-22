@@ -1,4 +1,4 @@
-package main;
+package calc;
 
 @SuppressWarnings("serial")
 public class UnknownCharacterException extends Exception{

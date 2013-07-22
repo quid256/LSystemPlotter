@@ -1,8 +1,13 @@
-package main;
+package calc;
 
 import java.util.HashMap;
 
 import javax.swing.SwingWorker;
+
+import util.LActions;
+
+import main.RuleTableDataProvider;
+
 
 public class LSystemCalculator extends SwingWorker<Void, Void>{
 
@@ -23,8 +28,13 @@ public class LSystemCalculator extends SwingWorker<Void, Void>{
 		HashMap<String, String> mapping = new HashMap<String, String>();
 		HashMap<String, String> acmapping = new HashMap<String, String>();
 		for (int i = 0; i < dataProvider.getRowCount(); i++) {
-			mapping.put((String)dataProvider.getValueAt(i, 0), (String)dataProvider.getValueAt(i, 1));
-			acmapping.put((String)dataProvider.getValueAt(i, 0), (String)dataProvider.getValueAt(i, 2));
+			if (!mapping.containsKey((String)dataProvider.getValueAt(i, 0))) {
+				mapping.put((String)dataProvider.getValueAt(i, 0), (String)dataProvider.getValueAt(i, 1));
+				acmapping.put((String)dataProvider.getValueAt(i, 0), (String)dataProvider.getValueAt(i, 2));
+			} else {
+				this.listen.calculatorError(new Exception("Multiple results for identifier: " + (String)dataProvider.getValueAt(i, 0)));
+				return null;
+			}
 		}
 		String curIter = initString;
 		if (curIter.length() < 1) {

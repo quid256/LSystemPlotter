@@ -1,13 +1,16 @@
-package main;
+package util;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
 public class ColorPickerComponent extends JLabel implements MouseListener {
@@ -21,6 +24,8 @@ public class ColorPickerComponent extends JLabel implements MouseListener {
 		this.setVerticalAlignment(SwingConstants.CENTER);
 		this.setHorizontalAlignment(SwingConstants.CENTER);
 		
+		this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		
 		col = initialCol;
 	}
 	
@@ -29,10 +34,11 @@ public class ColorPickerComponent extends JLabel implements MouseListener {
 		
 		
 		g.setColor(col);
-		g.fillRect(0,0, this.getWidth() -1 , this.getHeight() - 1);
+		g.fillRect(0,0, this.getWidth()  , this.getHeight());
 		
-		g.setColor(Color.black);
-		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
+		
+		
+
 		float lum = Color.RGBtoHSB(col.getRed(), col.getGreen(), col.getBlue(), null)[2];
 		
 		if (lum < 0.5) {

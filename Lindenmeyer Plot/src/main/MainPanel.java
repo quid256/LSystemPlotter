@@ -27,6 +27,11 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextField;
 
+import util.ColorPickerComponent;
+import util.LActions;
+
+import calc.CalcProgressPanel;
+
 
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel implements ActionListener, TableModelListener {
@@ -38,7 +43,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 	PlotPanel plotPanel;
 	JProgressBar progressBar, subProgressBar;
 	JSpinner iterSpinner;
-	private JTextField textField;
+	private JTextField txtA;
 	
 	private ColorPickerComponent gradBegColorPicker, gradEndColorPicker;
 	
@@ -65,7 +70,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		
 		
 		
-		setPreferredSize(new Dimension(640, 250));
+		setPreferredSize(new Dimension(440, 250));
 		
 		dataProvider = new RuleTableDataProvider();
 		dataProvider.addTableModelListener(this);
@@ -84,6 +89,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
         TableColumn actionColumn = table.getColumnModel().getColumn(2);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setMaximumSize(new Dimension(1000, 32767));
         panel.add(scrollPane);
         
        /* JTable opTable = new JTable(configDataProvider);
@@ -113,10 +119,10 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
         opPanel.setAlignmentY(Component.TOP_ALIGNMENT);
         opPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         opPanel.setLayout(new BoxLayout(opPanel, BoxLayout.Y_AXIS));
-        opPanel.setMaximumSize(new Dimension(20, 500));
+        opPanel.setMaximumSize(new Dimension(30, 500));
         this.add(opPanel);
         
-		JButton addBttn = new JButton("Add Row");
+		JButton addBttn = new JButton("Add Identifier");
 		addBttn.setAlignmentY(Component.TOP_ALIGNMENT);
 		addBttn.setMaximumSize(new Dimension(150, 26));
 		addBttn.setVerticalAlignment(SwingConstants.TOP);
@@ -125,7 +131,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		addBttn.addActionListener(this);
 		opPanel.add(addBttn);
 		
-		JButton remBttn = new JButton("Remove Row");
+		JButton remBttn = new JButton("Remove Identifier");
 		remBttn.setAlignmentY(Component.TOP_ALIGNMENT);
 		remBttn.setMaximumSize(new Dimension(150, 26));
 		remBttn.setActionCommand("remElement");
@@ -168,7 +174,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		opPanel.add(lblIterations);
 		
 		iterSpinner = new JSpinner();
-		iterSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+		iterSpinner.setModel(new SpinnerNumberModel(new Integer(5), new Integer(1), null, new Integer(1)));
 		iterSpinner.setAlignmentY(Component.TOP_ALIGNMENT);
 		iterSpinner.setAlignmentX(Component.LEFT_ALIGNMENT);
 		iterSpinner.setPreferredSize(new Dimension(150, 20));
@@ -182,11 +188,12 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		JLabel lblStartingString = new JLabel("Starting String:");
 		opPanel.add(lblStartingString);
 		
-		textField = new JTextField();
-		textField.setAlignmentY(Component.TOP_ALIGNMENT);
-		textField.setAlignmentX(Component.LEFT_ALIGNMENT);
-		textField.setMaximumSize(new Dimension(150, 20));
-		opPanel.add(textField);
+		txtA = new JTextField();
+		txtA.setText("a");
+		txtA.setAlignmentY(Component.TOP_ALIGNMENT);
+		txtA.setAlignmentX(Component.LEFT_ALIGNMENT);
+		txtA.setMaximumSize(new Dimension(150, 20));
+		opPanel.add(txtA);
 		
 		
 		plotFrame = new JFrame("Fractal Plot");
@@ -224,7 +231,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 			}
 		} else if (aC == "Plot") {
 			JFrame progressFrame = new JFrame("Constructing L-System...");
-			CalcProgressPanel p = new CalcProgressPanel(progressFrame, textField.getText(), dataProvider, (Integer)iterSpinner.getValue(), gradBegColorPicker.getColor(), gradEndColorPicker.getColor());
+			CalcProgressPanel p = new CalcProgressPanel(progressFrame, txtA.getText(), dataProvider, (Integer)iterSpinner.getValue(), gradBegColorPicker.getColor(), gradEndColorPicker.getColor());
 			progressFrame.getContentPane().add(p);
 			progressFrame.pack();
 			progressFrame.setVisible(true);

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
 
+import util.LActions;
+
+
 @SuppressWarnings("serial")
 public class RuleTableDataProvider extends AbstractTableModel {
 	
@@ -31,6 +34,8 @@ public class RuleTableDataProvider extends AbstractTableModel {
 		tableEntries.add(new RuleTableEntry("-", "-", LActions.ROTATECC.toString(), 90));
 		tableEntries.add(new RuleTableEntry("[", "[", LActions.PUSHSTATE.toString(), -1));
 		tableEntries.add(new RuleTableEntry("]", "]", LActions.POPSTATE.toString(), -1));
+		tableEntries.add(new RuleTableEntry("a", "a+b", LActions.FORWARD.toString(), 5));
+		tableEntries.add(new RuleTableEntry("b", "a-b", LActions.FORWARD.toString(), 5));
 	}
 	
 	@Override

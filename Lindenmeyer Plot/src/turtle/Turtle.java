@@ -6,7 +6,9 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Stack;
 
-import main.LActions;
+import util.LActions;
+
+
 import main.RuleTableDataProvider;
 
 @SuppressWarnings("serial")
