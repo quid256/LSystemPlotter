@@ -45,6 +45,7 @@ public class CalcProgressPanel extends JPanel implements CalculatorProgressListe
 		p.load(pattern, segLength, dataProvider, gradBegCol, gradEndCol);
 		
 		JFrame plotFrame = new JFrame("Fractal Plot");
+		plotFrame.setResizable(false);
 		plotFrame.add(p);
 		plotFrame.pack();
 		plotFrame.setVisible(true);

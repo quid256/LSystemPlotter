@@ -108,7 +108,7 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		System.out.println("pressed");
+		//System.out.println("pressed");
 		isDragging = true;
 		pressedPoint = arg0.getPoint();
 		
@@ -131,10 +131,21 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 			this.curPos.x = this.curPos.x + dx;
 			this.curPos.y = this.curPos.y + dy;
 			
+			if (curPos.y < (500 - canvasSize.height)) {
+				curPos.y = 500 - canvasSize.height;
+			} else if (curPos.y > 0 ) {
+				curPos.y = 0;
+			}
+			
+			if (curPos.x < (500 - canvasSize.width)) {
+				curPos.x = 500 - canvasSize.width;
+			} else if (curPos.x > 0) {
+				curPos.x = 0;
+			}
 /*			System.out.println(coordsLabel);
 			System.out.println(curPos);
 			System.out.println(canvasSize);*/
-			this.coordsLabel.setText((curPos.x + canvasSize.width / 2 - 250) + ", " + (curPos.y + canvasSize.height / 2 - 250));
+			this.coordsLabel.setText(-(curPos.x + canvasSize.width / 2 - 250) + ", " + -(curPos.y + canvasSize.height / 2 - 250));
 			
 			pressedPoint = arg0.getPoint();
 			

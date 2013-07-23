@@ -1,35 +1,39 @@
 package main;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableColumn;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JTextField;
 
 import util.ColorPickerComponent;
 import util.LActions;
-
 import calc.CalcProgressPanel;
 
 
@@ -46,6 +50,8 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 	private JTextField txtA;
 	
 	private ColorPickerComponent gradBegColorPicker, gradEndColorPicker;
+	
+	private JFileChooser fc;
 	
 	public static void main(String[] args) {
 		JFrame mainFrame = new JFrame();
@@ -70,7 +76,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		
 		
 		
-		setPreferredSize(new Dimension(440, 250));
+		setPreferredSize(new Dimension(440, 310));
 		
 		dataProvider = new RuleTableDataProvider();
 		dataProvider.addTableModelListener(this);
@@ -174,7 +180,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		opPanel.add(lblIterations);
 		
 		iterSpinner = new JSpinner();
-		iterSpinner.setModel(new SpinnerNumberModel(new Integer(5), new Integer(1), null, new Integer(1)));
+		iterSpinner.setModel(new SpinnerNumberModel(5, 1, 255, 1));
 		iterSpinner.setAlignmentY(Component.TOP_ALIGNMENT);
 		iterSpinner.setAlignmentX(Component.LEFT_ALIGNMENT);
 		iterSpinner.setPreferredSize(new Dimension(150, 20));
@@ -195,8 +201,29 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		txtA.setMaximumSize(new Dimension(150, 20));
 		opPanel.add(txtA);
 		
+		Component verticalStrut_3 = Box.createVerticalStrut(20);
+		verticalStrut_3.setMaximumSize(new Dimension(150, 15));
+		opPanel.add(verticalStrut_3);
 		
-		plotFrame = new JFrame("Fractal Plot");
+		JButton saveBttn = new JButton("Save");
+		saveBttn.setActionCommand("Save");
+		saveBttn.addActionListener(this);
+		saveBttn.setMaximumSize(new Dimension(150, 26));
+		saveBttn.setAlignmentY(0.0f);
+		opPanel.add(saveBttn);
+		
+		JButton loadBttn = new JButton("Load");
+		loadBttn.setActionCommand("Load");
+		loadBttn.addActionListener(this);
+		loadBttn.setMaximumSize(new Dimension(150, 26));
+		loadBttn.setAlignmentY(0.0f);
+		opPanel.add(loadBttn);
+		
+		fc = new JFileChooser();
+		fc.setAcceptAllFileFilterUsed(false);
+		fc.setFileFilter(new FileNameExtensionFilter("LindenPlot data file", "lpdf"));
+		
+/*		plotFrame = new JFrame("Fractal Plot");
 		//plotFrame.getContentPane().setLayout(new BoxLayout(plotFrame, BoxLayout.Y_AXIS));
 		
 		plotPanel = new PlotPanel();
@@ -215,13 +242,14 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		//plotFrame.add(closeButton);
 		plotFrame.setSize(500, 500);
 		plotFrame.pack();
-		plotFrame.setResizable(false);
+		plotFrame.setResizable(false);*/
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		String aC = ae.getActionCommand();
+		System.out.println(ae.getActionCommand());
 		
 		if (aC == "AddElement") {
 			dataProvider.addRow("a", "a+a", LActions.FORWARD.toString(), 1);
@@ -236,9 +264,68 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 			progressFrame.pack();
 			progressFrame.setVisible(true);
 			
-		} else if (aC == "saveFile") {
-			plotPanel.savePic();
+		} else if (aC == "Save") {
+			if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+				File sf = fc.getSelectedFile();
+				
+				if (!sf.getName().endsWith(".lpdf")) {
+					sf = new File(sf + ".lpdf");
+				}
+				
+				BufferedWriter writer = null;
+				try {
+					writer = new BufferedWriter(new FileWriter(sf));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String content = "";
+				
+				Color begcolor = gradBegColorPicker.getColor();
+				Color endcolor = gradEndColorPicker.getColor();
 			
+				content += (char)begcolor.getRed();
+				content += (char)begcolor.getGreen();
+				content += (char)begcolor.getBlue();
+				
+				content += (char)endcolor.getRed();
+				content += (char)endcolor.getGreen();
+				content += (char)endcolor.getBlue();
+				
+				content += (char)(int)iterSpinner.getValue();
+				
+				
+				
+				for (int i = 0; i < dataProvider.getRowCount(); i++) {
+
+					content += " " + (String)dataProvider.getValueAt(i, 0) + " ";
+					content += (String)dataProvider.getValueAt(i, 1) + " ";
+					
+					for (int acID = 0; acID < LActions.values().length; acID++) {
+						if (LActions.values()[acID].toString().equals((String)dataProvider.getValueAt(i, 2))) {
+							content += Integer.toString(acID);
+							break;
+						}
+					}
+					
+					content += " " + (Integer)dataProvider.getValueAt(i, 3);
+					
+				}
+				
+				try {
+					writer.write(content);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 	}
