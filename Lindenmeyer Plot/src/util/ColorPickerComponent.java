@@ -56,6 +56,10 @@ public class ColorPickerComponent extends JLabel implements MouseListener {
 		return col;
 	}
 	
+	public void setColor(Color c) {
+		this.col = c;
+	}
+	
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {

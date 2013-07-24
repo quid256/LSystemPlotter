@@ -89,4 +89,12 @@ public class RuleTableDataProvider extends AbstractTableModel {
 		this.fireTableRowsDeleted(rowIndex, rowIndex);
 	}
 
+	public void clearAll() {
+		int oldSize = this.getRowCount();
+		tableEntries.removeAll(tableEntries);
+		
+		this.fireTableRowsDeleted(0, oldSize);
+		
+	}
+
 }

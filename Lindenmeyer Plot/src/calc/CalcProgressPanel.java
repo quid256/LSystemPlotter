@@ -1,12 +1,15 @@
 package calc;
 
 import java.awt.Color;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import main.MainPanel;
 import main.PlotPanel;
 import main.RuleTableDataProvider;
 
@@ -45,6 +48,12 @@ public class CalcProgressPanel extends JPanel implements CalculatorProgressListe
 		p.load(pattern, segLength, dataProvider, gradBegCol, gradEndCol);
 		
 		JFrame plotFrame = new JFrame("Fractal Plot");
+		try {
+			plotFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		plotFrame.setResizable(false);
 		plotFrame.add(p);
 		plotFrame.pack();

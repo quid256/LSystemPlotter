@@ -5,11 +5,15 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -55,8 +59,13 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 	
 	public static void main(String[] args) {
 		JFrame mainFrame = new JFrame();
+		try {
+			mainFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setTitle("L-System Fractal Plotter");
+		mainFrame.setTitle("LindenPlot - Fractal0");
 		mainFrame.getContentPane().setLayout(new GridLayout(1, 1, 0, 0));
 		
 		MainPanel mP = new MainPanel();
@@ -249,7 +258,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		String aC = ae.getActionCommand();
-		System.out.println(ae.getActionCommand());
+		//System.out.println(ae.getActionCommand());
 		
 		if (aC == "AddElement") {
 			dataProvider.addRow("a", "a+a", LActions.FORWARD.toString(), 1);
@@ -259,6 +268,12 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 			}
 		} else if (aC == "Plot") {
 			JFrame progressFrame = new JFrame("Constructing L-System...");
+			try {
+				progressFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			CalcProgressPanel p = new CalcProgressPanel(progressFrame, txtA.getText(), dataProvider, (Integer)iterSpinner.getValue(), gradBegColorPicker.getColor(), gradEndColorPicker.getColor());
 			progressFrame.getContentPane().add(p);
 			progressFrame.pack();
@@ -272,6 +287,8 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 					sf = new File(sf + ".lpdf");
 				}
 				
+				
+				
 				BufferedWriter writer = null;
 				try {
 					writer = new BufferedWriter(new FileWriter(sf));
@@ -284,17 +301,19 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 				Color begcolor = gradBegColorPicker.getColor();
 				Color endcolor = gradEndColorPicker.getColor();
 			
-				content += (char)begcolor.getRed();
-				content += (char)begcolor.getGreen();
-				content += (char)begcolor.getBlue();
+				content += Integer.toString(begcolor.getRed());
+				content += " "+Integer.toString(begcolor.getGreen());
+				content += " "+Integer.toString(begcolor.getBlue());
 				
-				content += (char)endcolor.getRed();
-				content += (char)endcolor.getGreen();
-				content += (char)endcolor.getBlue();
+				content += " "+Integer.toString(endcolor.getRed());
+				content += " "+Integer.toString(endcolor.getGreen());
+				content += " "+Integer.toString(endcolor.getBlue());
 				
-				content += (char)(int)iterSpinner.getValue();
+				content += " " + Integer.toString((int)iterSpinner.getValue());
 				
+				content += " " + txtA.getText();
 				
+				System.out.println(content);
 				
 				for (int i = 0; i < dataProvider.getRowCount(); i++) {
 
@@ -312,6 +331,8 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 					
 				}
 				
+				System.out.println(content);
+				
 				try {
 					writer.write(content);
 				} catch (IOException e) {
@@ -325,9 +346,62 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				this.mainFrame.setTitle("LindenPlot - " + sf.getName());
+			}
+		} else if (aC == "Load") {
+			if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+				File of = fc.getSelectedFile();
+				
+				if (of == null) {
+					return;
+				}
+				
+				BufferedReader r = null;
+				
+				try {
+					r = new BufferedReader(new FileReader(of));
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				String content = "";
+				try {
+					content = r.readLine();
+					r.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				String[] data = content.split(" ");
+				
+				Color begColor = new Color(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]));
+				gradBegColorPicker.setColor(begColor);
+				gradBegColorPicker.repaint();
+				
+				Color endColor = new Color(Integer.parseInt(data[3]),Integer.parseInt(data[4]),Integer.parseInt(data[5]));
+				gradEndColorPicker.setColor(endColor);
+				gradEndColorPicker.repaint();
+				
+				iterSpinner.setValue(Integer.parseInt(data[6]));
+				
+				
+				
+				txtA.setText(data[7]);
+				
+				dataProvider.clearAll();
+				
+				for (int i = 8; i < data.length; i++) {
+					dataProvider.addRow(data[i], data[i + 1], LActions.values()[Integer.parseInt(data[i + 2])].toString(), Integer.parseInt(data[i + 3]));
+					i += 3;
+				}
+				
+				this.mainFrame.setTitle("LindenPlot - " + of.getName());
+				
 			}
 		}
-		
 	}
 
 	@Override
