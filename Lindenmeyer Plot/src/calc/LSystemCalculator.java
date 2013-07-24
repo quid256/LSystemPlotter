@@ -28,14 +28,49 @@ public class LSystemCalculator extends SwingWorker<Void, Void>{
 		HashMap<String, String> mapping = new HashMap<String, String>();
 		HashMap<String, String> acmapping = new HashMap<String, String>();
 		for (int i = 0; i < dataProvider.getRowCount(); i++) {
-			if (!mapping.containsKey((String)dataProvider.getValueAt(i, 0))) {
-				mapping.put((String)dataProvider.getValueAt(i, 0), (String)dataProvider.getValueAt(i, 1));
-				acmapping.put((String)dataProvider.getValueAt(i, 0), (String)dataProvider.getValueAt(i, 2));
+			String identifier = (String)dataProvider.getValueAt(i, 0);
+			if (!mapping.containsKey(identifier)) {
+				
+				mapping.put(identifier, (String)dataProvider.getValueAt(i, 1));
+				acmapping.put(identifier, (String)dataProvider.getValueAt(i, 2));
 			} else {
 				this.listen.calculatorError(new Exception("Multiple results for identifier: " + (String)dataProvider.getValueAt(i, 0)));
 				return null;
 			}
 		}
+		
+		for (String identifier : mapping.keySet()) {
+			int diffVal;
+			if (acmapping.get(identifier) == LActions.POPSTATE.toString()) {
+				diffVal = 1;
+			} else if (acmapping.get(identifier) == LActions.PUSHSTATE.toString()) {
+				diffVal = -1;
+			} else {
+				diffVal = 0;
+			}
+			
+			String outputChar = mapping.get(identifier);
+			int realDiffVal = 0;
+			for (int i = 0; i < outputChar.length(); i++) {
+				if (acmapping.get(outputChar.substring(i, i + 1)) == LActions.POPSTATE.toString()) {
+					realDiffVal++;
+				} else if (acmapping.get(outputChar.substring(i, i + 1)) == LActions.PUSHSTATE.toString()) {
+					realDiffVal--;
+				}
+			}
+			
+			if (realDiffVal != diffVal) {
+				if (diffVal == 1) {
+					this.listen.calculatorError(new Exception("identifier '" + identifier + "' needs to have 1 more pop than push character"));
+				} else if (diffVal == -1) {
+					this.listen.calculatorError(new Exception("identifier '" + identifier + "' needs to have 1 more pop than push character"));
+				} else {
+					this.listen.calculatorError(new Exception("identifier '" + identifier + "' needs to have the same number of pop and push characters"));
+				}
+				return null;
+			}
+		}
+		
 		String curIter = initString;
 		if (curIter.length() < 1) {
 			this.listen.calculatorError(new Exception("Starting string needs to be longer than 0 characters!"));
