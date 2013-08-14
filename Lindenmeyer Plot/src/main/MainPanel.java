@@ -75,6 +75,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setTitle("LindenPlot - Fractal0");
 		mainFrame.getContentPane().setLayout(new GridLayout(1, 1, 0, 0));
@@ -281,6 +282,8 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		} else if (aC == "Help") {
 			JFrame helpFrame = new JFrame("Help");
 			helpFrame.setResizable(false);
+			helpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			helpFrame.setLocationRelativeTo(null);
 			//helpFrame.setSize(new Dimension(530, 235));
 			try {
 				helpFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
@@ -298,6 +301,9 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 			
 		} else if (aC == "Plot") {
 			JFrame progressFrame = new JFrame("Constructing L-System...");
+			progressFrame.setResizable(false);
+			progressFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			progressFrame.setLocationRelativeTo(null);
 			try {
 				progressFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
 			} catch (IOException e) {
