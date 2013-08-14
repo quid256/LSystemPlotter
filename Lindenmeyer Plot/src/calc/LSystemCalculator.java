@@ -28,13 +28,13 @@ public class LSystemCalculator extends SwingWorker<Void, Void>{
 		HashMap<String, String> mapping = new HashMap<String, String>();
 		HashMap<String, String> acmapping = new HashMap<String, String>();
 		for (int i = 0; i < dataProvider.getRowCount(); i++) {
-			String identifier = (String)dataProvider.getValueAt(i, 0);
+			String identifier = (String)dataProvider.getValueAt(i, 1);
 			if (!mapping.containsKey(identifier)) {
 				
-				mapping.put(identifier, (String)dataProvider.getValueAt(i, 1));
-				acmapping.put(identifier, (String)dataProvider.getValueAt(i, 2));
+				mapping.put(identifier, (String)dataProvider.getValueAt(i, 2));
+				acmapping.put(identifier, (String)dataProvider.getValueAt(i, 3));
 			} else {
-				this.listen.calculatorError(new Exception("Multiple results for identifier: " + (String)dataProvider.getValueAt(i, 0)));
+				this.listen.calculatorError(new Exception("Multiple results for identifier: " + (String)dataProvider.getValueAt(i, 1)));
 				return null;
 			}
 		}

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JColorChooser;
@@ -34,7 +33,8 @@ public class ColorPickerComponent extends JLabel implements MouseListener {
 		
 		
 		g.setColor(col);
-		g.fillRect(0,0, this.getWidth()  , this.getHeight());
+		
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		
 		
 		

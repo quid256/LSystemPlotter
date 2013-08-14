@@ -17,7 +17,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -34,7 +33,7 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 	private Point pressedPoint = new Point(0, 0);
 	private final Dimension canvasSize = new Dimension(2000, 2000);
 	
-	public JLabel coordsLabel;
+	public String coordsLabel;
 	public JButton saveBttn;
 	private final JFileChooser fc = new JFileChooser();
 	
@@ -45,12 +44,13 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 		img = new BufferedImage(canvasSize.width, canvasSize.height, BufferedImage.TYPE_INT_RGB);
 		imgGraphics = img.createGraphics();
 
-		saveBttn = new JButton("save");
+		this.coordsLabel = "0, 0";
+		
+		saveBttn = new JButton("Export");
+		saveBttn.setCursor(Cursor.getDefaultCursor());
 		saveBttn.addActionListener(this);
 		this.add(saveBttn);
 		
-		coordsLabel = new JLabel("0, 0");
-		this.add(coordsLabel);
 		
 		
 		
@@ -61,7 +61,7 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 		addMouseMotionListener(this);
 		
 		fc.setAcceptAllFileFilterUsed(false);
-		fc.setFileFilter(new FileNameExtensionFilter("PNG file", "png"));
+		fc.setFileFilter(new FileNameExtensionFilter("PNG image (*.png)", "png"));
 		
 	}
 	
@@ -84,6 +84,11 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 	public void paint(Graphics g) {
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 		g.drawImage(img, curPos.x, curPos.y, canvasSize.width, canvasSize.height,null);
+		g.setColor(Color.white);
+		g.fillRect(this.getWidth() / 2 - 35, this.getHeight() - 12 - 12, 70, 18);
+		g.setColor(Color.black);
+		g.drawRect(this.getWidth() / 2 - 35, this.getHeight() - 12 - 12, 70, 18);
+		g.drawString(this.coordsLabel, (int)(this.getWidth() / 2 - g.getFontMetrics().getStringBounds(this.coordsLabel, g).getWidth() / 2), this.getHeight() - 10);
 		super.paintComponents(g);
 		
 	}
@@ -108,23 +113,25 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		//System.out.println("pressed");
-		isDragging = true;
-		pressedPoint = arg0.getPoint();
+		//System.out.println(arg0.getButton() == 1);
+		if (arg0.getButton() == 1) {
+			isDragging = true;
+			pressedPoint = arg0.getPoint();
+		}
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		//System.out.println("released");
-		isDragging = false;
+		
+		if (arg0.getButton() == 1)
+			isDragging = false;
 		
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		if (isDragging) {
-			//System.out.println("dragging");
 			int dx = arg0.getX() - pressedPoint.x;
 			int dy = arg0.getY() - pressedPoint.y;
 			
@@ -142,10 +149,8 @@ public class PlotPanel extends JPanel implements MouseListener, MouseMotionListe
 			} else if (curPos.x > 0) {
 				curPos.x = 0;
 			}
-/*			System.out.println(coordsLabel);
-			System.out.println(curPos);
-			System.out.println(canvasSize);*/
-			this.coordsLabel.setText(-(curPos.x + canvasSize.width / 2 - 250) + ", " + -(curPos.y + canvasSize.height / 2 - 250));
+
+			this.coordsLabel = -(curPos.x + canvasSize.width / 2 - 250) + ", " + -(curPos.y + canvasSize.height / 2 - 250);
 			
 			pressedPoint = arg0.getPoint();
 			

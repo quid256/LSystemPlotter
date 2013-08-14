@@ -116,14 +116,13 @@ public class Turtle extends Point2D.Double {
 	}
 	
 	public void drawFromInstructions(String instructions, int segLength, RuleTableDataProvider dataProvider) {
-		System.out.println("Drawing from: " + instructions);
-		System.out.println("segLength: " + segLength);
+		
 		
 		HashMap<Character, String> instructionMapping = new HashMap<Character, String>();
 		HashMap<Character, Integer> amountMapping = new HashMap<Character, Integer>();
 		for (int row = 0; row < dataProvider.getRowCount(); ++row) {
-			instructionMapping.put(((String)dataProvider.getValueAt(row, 0)).charAt(0), (String)dataProvider.getValueAt(row, 2));
-			amountMapping.put(((String)dataProvider.getValueAt(row, 0)).charAt(0), (Integer)dataProvider.getValueAt(row, 3));
+			instructionMapping.put(((String)dataProvider.getValueAt(row, 1)).charAt(0), (String)dataProvider.getValueAt(row, 3));
+			amountMapping.put(((String)dataProvider.getValueAt(row, 1)).charAt(0), (Integer)dataProvider.getValueAt(row, 4));
 		}
 		
 		for (int i = 0; i < instructions.length(); ++i) {

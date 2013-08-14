@@ -1,0 +1,51 @@
+<h1 style="text-align: center;"><big><strong>LindenPlot Help</strong></big></h1>
+<p>So, you may be wondering what this is or how to use it. Well, before using this application, you should understand L-System Fractals. If you already understand L-System Fractals and the basics of how they work, then you can skip the next section.</p>
+<h2><strong>L-System Crash Course</strong></h2>
+<p>The term L-System stands for "Lindenmayer System", and is named after Aristid Lindenmayer, who used to model plant growth. L-Systems in themselves are not actually pictures, but sets of identifiers. So what are they? Well, let me just give you an example of one. Lets say I have 2 characters, A and B. Now, lets say I make a rule, saying that whenever I see A, I will replace it with AB, and whenever I see B, I'll replace it with A. Now, let me start out with A. This is the zeroth&nbsp;iteration, because 0 replacements have been done. After the first iteration, the A is replaced with AB, so now we have AB. After the second iteration, the A is replaced with AB, and the B is replace with A, so we have ABA. Here's a more graphical representation, where n is the iteration #:</p>
+<pre>
+n=0:        A
+           / \
+n=1:      A   B
+         /|    \
+n=2:    A B     A
+       /| |     |\
+n=3:  A B A     A B
+     /| | |\    |\ \
+n=4:A B A A B   A B A</pre>
+<div>The way that graphical L-Systems work is by taking these characters and mapping them to graphical actions on the screen. This will be described more in detail later.</div>
+<h2><strong>The Main Screen - Overview</strong></h2>
+<p>So, you know what L-Systems are, and you're ready to start experimenting with them yourself. When you first opened this application, you saw a screen that was small, and perhaps very confusing. Here are some of the things that are on this screen, and what they do:</p>
+<ul>
+<li>A big table for setting up rules - used to set up the rules used to create an L-System</li>
+<li>A button for adding an identifier - used to create more complex L-Systems</li>
+<li>A button for plotting the fractal - pretty self explanatory :)</li>
+<li>2 color selectors - The can be used to change the color scheme of the fractal</li>
+<li>An iteration # selector - Selects the number of iterations.</li>
+<li>A "Starting String" field - Specifies which characters you want to start the L-System off with.</li>
+<li>"Save" and "Load" buttons - Used to save and load the L-System rules in a file</li>
+<li>&nbsp;A help button - This is how you got here.</li>
+</ul>
+<p>So those are the basic features. Now lets go a little more in-depth into the table.</p>
+<h2><strong>The Rule Table</strong></h2>
+<p>The table is one of the most noticeable features in the main screen. It comes pre-loaded with a pattern that creates the 5th iteration of the famous "Dragon Curve." It serves the most important function among all of the parts of the application. Because of this, it's very important to understand what everything in this table accomplishes. I'll go through each column and explain what it does:</p>
+<ol>
+<li>Remove - remove the specified identifier - result pair</li>
+<li>Identifier - The character that will be replaced by the result every iteration</li>
+<li>Result - What replaces the identifier every iteration</li>
+<li>Action - In order for a long list of characters to make a pretty picture, each character has to mean something graphically. In this case, we are mapping them to turtle actions. If you aren't familiar with turtles, just pretend that you're looking top down on a guy with breadcrumbs, and he drops them wherever he goes. Each character in the finally generated list of characters is mapped to some graphical action this guy could take. Here are the ones he can take in this program:
+<ul>
+<li>Turn Clockwise (A common character for this is +)</li>
+<li>Turn Counter-Clockwise (A common character for this is -)</li>
+<li>Go Forward</li>
+<li>Do Nothing</li>
+<li>Write down his direction and location at the end of a list (also known as Push State) (A common character for this is [)</li>
+<li>Go back to the most recent direction and location on the list and erase it from the list (also known as Pop State) (A common character for this is ])</li>
+</ul>
+</li>
+<li>Amount - sometimes, the action will require an amount that it needs to do something, for example, how many degrees to turn clockwise, or how many pixels to go forward. If the action doesn't require an amount, it will become -1 and you will be unable to edit it.</li>
+</ol>
+<div>That's it for the rule table! It's easy from here on out. You should already understand all of the features on the main screen!</div>
+<h2><strong>The Calculator and Plotter Interfaces</strong></h2>
+<p>When you decide you want to see what your L-System actually looks like, just press the Plot button, and a window will appear informing you of the progress of calculating the L-System. The first progress bar tells you the precentage of iterations fully calculated, and the second tells you the percentage of characters in the current iteration that have been replaced. You may close this window at any time if you decide that the length of the calculation is trying your patience. Be warned, there is a limit to the amount of characters the application can hold, so don't blame me if you try calculating a big L-System, only to find the progress bar stopped due to the length being too large.</p>
+<p>After this window has been closed, you will see a new window displaying your plotted fractal! You can now navigate around in the 2000x2000px canvas that has been generated for you of your fractal. You will see a set of coordinates at the bottom of the window, telling you where you are, so that you won't get lost. At the top, there is an export button that allows you to export your L-System as a PNG image, so that you can show others what you have created.</p>
+<h2><strong>That's all there is too it! Have fun!</strong></h2>

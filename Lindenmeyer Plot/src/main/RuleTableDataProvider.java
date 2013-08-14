@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 import util.LActions;
+import util.TableButton;
 
 
 @SuppressWarnings("serial")
@@ -12,30 +13,50 @@ public class RuleTableDataProvider extends AbstractTableModel {
 	
 	private class RuleTableEntry {
 		
-		public ArrayList<Object> rowData = new ArrayList<Object>();
-		public RuleTableEntry(String name, String result, String action, int amount) {
+		public TableButton.TableButtonData bData;
+		private ArrayList<Object> rowData = new ArrayList<Object>();
+		public RuleTableEntry(String name, String result, String action, int amount, int rowID) {
+			this.bData = new TableButton.TableButtonData("DEL", rowID);
+			//System.out.println(rowID);
+			rowData.add(bData);
 			rowData.add(name);
 			rowData.add(result);
 			rowData.add(action);
 			rowData.add(amount);
 		}
+		
+		public String toString() {
+			return "RTE " + rowData.toString();
+		}
+		
+		public ArrayList<Object> getRowData() { return rowData; }
 	}
 	
 	private ArrayList<String> colNames = new ArrayList<String>();
+	//private LinkedHashMap<Integer, RuleTableEntry> tableEntries = new LinkedHashMap<Integer, RuleTableEntry>();
+	
 	private ArrayList<RuleTableEntry> tableEntries = new ArrayList<RuleTableEntry>();
 	
+	int curIndex = 0;
+	
 	public RuleTableDataProvider() {
-		colNames.add("identifier");
-		colNames.add("result");
-		colNames.add("action");
-		colNames.add("amount");
+		colNames.add("Remove");
+		colNames.add("Identifier");
+		colNames.add("Result");
+		colNames.add("Action");
+		colNames.add("Amount");
 		
-		tableEntries.add(new RuleTableEntry("+", "+", LActions.ROTATECW.toString(), 90));
-		tableEntries.add(new RuleTableEntry("-", "-", LActions.ROTATECC.toString(), 90));
-		tableEntries.add(new RuleTableEntry("[", "[", LActions.PUSHSTATE.toString(), -1));
-		tableEntries.add(new RuleTableEntry("]", "]", LActions.POPSTATE.toString(), -1));
-		tableEntries.add(new RuleTableEntry("a", "a+b", LActions.FORWARD.toString(), 5));
-		tableEntries.add(new RuleTableEntry("b", "a-b", LActions.FORWARD.toString(), 5));
+		addTableEntry("+", "+", LActions.ROTATECW.toString(), 90);
+		addTableEntry("-", "-", LActions.ROTATECC.toString(), 90);
+		addTableEntry("[", "[", LActions.PUSHSTATE.toString(), -1);
+		addTableEntry("]", "]", LActions.POPSTATE.toString(), -1);
+		addTableEntry("a", "a+b", LActions.FORWARD.toString(), 5);
+		addTableEntry("b", "a-b", LActions.FORWARD.toString(), 5);
+	}
+	
+	private void addTableEntry(String name, String result, String action, int amount) {
+		
+		tableEntries.add(new RuleTableEntry(name, result, action, amount, curIndex++));
 	}
 	
 	@Override
@@ -59,8 +80,8 @@ public class RuleTableDataProvider extends AbstractTableModel {
 	}
 	
 	public boolean isCellEditable(int row, int col) {
-		if (col == 3) {
-			String strVal = (String)getValueAt(row, 2);
+		if (col == 4) {
+			String strVal = (String)getValueAt(row, 3);
 			if (strVal.equals(LActions.NOTHING.toString()) || strVal.equals(LActions.POPSTATE.toString()) || strVal.equals(LActions.PUSHSTATE.toString())) {
 				return false;
 			}
@@ -75,23 +96,33 @@ public class RuleTableDataProvider extends AbstractTableModel {
     }
 	
 	public void setValueAt(Object value, int row, int col) {
-		tableEntries.get(row).rowData.set(col, value);
-        fireTableCellUpdated(row, col);
+		//System.out.println("setValueAt "+ row +", " + col + " to " + value.toString());
+		if (col > 0) {
+			tableEntries.get(row).getRowData().set(col, value);
+	        fireTableCellUpdated(row, col);
+		}
     }
 	
 	public void addRow(String name, String result, String action, int amount) {
-		tableEntries.add(new RuleTableEntry(name, result, action, amount));
+		addTableEntry(name, result, action, amount);
 		this.fireTableRowsInserted(getRowCount()-1, getRowCount()-1);
 	}
 	
-	public void removeRow(int rowIndex) {
-		tableEntries.remove(rowIndex);
-		this.fireTableRowsDeleted(rowIndex, rowIndex);
+	public void removeRow(int rowID) {
+		
+		for (int i = 0; i < tableEntries.size(); i++) {
+			//System.out.println("tableEntries["+ i + "].bData.rowID = " + tableEntries.get(i).bData.rowID);
+			if (tableEntries.get(i).bData.rowID == rowID) {
+				tableEntries.remove(tableEntries.get(i));
+				this.fireTableRowsDeleted(i, i);
+				break;
+			}
+		}
 	}
 
 	public void clearAll() {
 		int oldSize = this.getRowCount();
-		tableEntries.removeAll(tableEntries);
+		tableEntries.clear();
 		
 		this.fireTableRowsDeleted(0, oldSize);
 		
