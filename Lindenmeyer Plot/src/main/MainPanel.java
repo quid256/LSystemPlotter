@@ -71,7 +71,7 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		
 		JFrame mainFrame = new JFrame();
 		try {
-			mainFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
+			mainFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("favicon.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -282,11 +282,10 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		} else if (aC == "Help") {
 			JFrame helpFrame = new JFrame("Help");
 			helpFrame.setResizable(false);
-			helpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			helpFrame.setLocationRelativeTo(null);
 			//helpFrame.setSize(new Dimension(530, 235));
 			try {
-				helpFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
+				helpFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("favicon.png")));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -302,10 +301,9 @@ public class MainPanel extends JPanel implements ActionListener, TableModelListe
 		} else if (aC == "Plot") {
 			JFrame progressFrame = new JFrame("Constructing L-System...");
 			progressFrame.setResizable(false);
-			progressFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			progressFrame.setLocationRelativeTo(null);
 			try {
-				progressFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
+				progressFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("favicon.png")));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

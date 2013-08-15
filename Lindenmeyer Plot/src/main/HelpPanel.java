@@ -1,6 +1,5 @@
 package main;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +14,7 @@ public class HelpPanel extends JPanel{
 	public HelpPanel() {
 		
 		JTextPane jtp = new JTextPane();
-		jtp.setDisabledTextColor(Color.black);
-		jtp.setEnabled(false);
+		jtp.setEditable(false);
 		jtp.setContentType("text/html");
 		
 		
@@ -38,7 +36,7 @@ public class HelpPanel extends JPanel{
 		jtp.setCaretPosition(0);
 		JScrollPane jsp = new JScrollPane(jtp);
 	
-		//jsp.setMaximumSize(new Dimension(200, 100));
+		jsp.setMaximumSize(new Dimension(200, 100));
 		jsp.setPreferredSize(new Dimension(530, 325));
 		add(jsp);
 		

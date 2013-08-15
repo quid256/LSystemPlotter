@@ -49,9 +49,8 @@ public class CalcProgressPanel extends JPanel implements CalculatorProgressListe
 		
 		JFrame plotFrame = new JFrame("Fractal Plot");
 		plotFrame.setLocationRelativeTo(null);
-		plotFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		try {
-			plotFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("iconPic.png")));
+			plotFrame.setIconImage(ImageIO.read(MainPanel.class.getClassLoader().getResource("favicon.png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
